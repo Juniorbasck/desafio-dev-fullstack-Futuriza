@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const API_URL = process.env.PUBLIC_API_URL as string;
+const API_URL = process.env.NEXT_PUBLIC_API_KEY as string;
 
 if (!API_URL) {
-    throw new Error('API_URL is not set');
+  throw new Error('API_URL is not set');
 }
 
 export async function fetchItems() {

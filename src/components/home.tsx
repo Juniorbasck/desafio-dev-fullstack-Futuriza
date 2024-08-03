@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect } from "react";
 import { fetchItems } from "../hooks/useItems"; // Certifique-se de que o caminho esteja correto
 
@@ -15,7 +17,7 @@ export function HomeComponent() {
 
     fetchData();
   }, []); 
-  
+
   return (
     <div className="grid grid-cols-12 gap-5">
       <div className="flex col-span-6 bg-red-600 justify-end p-5">
