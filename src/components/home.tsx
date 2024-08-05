@@ -15,6 +15,8 @@ export function HomeComponent() {
   const [modelSrc, setModelSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>("");
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +54,11 @@ export function HomeComponent() {
     return <div>{error}</div>;
   }
 
+  const handleColorClick = (cor: { name: string; color: string }) => {
+    setSelectedColor(cor.color);
+    console.log(selectedColor);
+  };
+
   const Model = dynamic(() => import("./model"), { ssr: false });
 
 
@@ -59,7 +66,7 @@ export function HomeComponent() {
     <div className="grid grid-cols-12 gap-5 p-10">
       <div className="text-black flex col-span-6 items-end justify-end p-10">
         <div className="bg-sky-950">
-          <Model src={modelSrc}/>
+          <Model src={modelSrc} selectedColor={selectedColor}/>
         </div>
       </div>
       <div className="text-black col-span-6 p-5">
@@ -73,6 +80,7 @@ export function HomeComponent() {
                 className={`w-20 h-20 rounded-lg`}
                 style={{ backgroundColor: cor.color }}
                 title={cor.name}
+                onClick={() => handleColorClick(cor)}
               ></div>
             ))}
           </div>
