@@ -44,7 +44,7 @@ export function HomeComponent() {
 
   if (loading) {
     return <div>Loading...</div>;
-  }
+  } 
 
   if (error) {
     return <div>{error}</div>;
@@ -52,7 +52,6 @@ export function HomeComponent() {
 
   const handleColorClick = (cor: { name: string; color: string }) => {
     setSelectedColor(cor.color);
-    console.log(selectedColor);
   };
 
   const Model = dynamic(() => import("./model"), { ssr: false });
