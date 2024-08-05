@@ -1,5 +1,5 @@
 import "@google/model-viewer";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ModelProps {
   src: string;
@@ -7,31 +7,60 @@ interface ModelProps {
 }
 
 const Model: React.FC<ModelProps> = ({ src, selectedColor }) => {
-  const modelRef = useRef<HTMLElement | null>(null);
+  const modelRef = useRef<HTMLDivElement | null>(null);
+  const [variants, setVariants] = useState<string[]>([]);
 
   useEffect(() => {
-    if (modelRef.current) {
-      const modelViewer = modelRef.current as unknown as { variantName: string };
-      modelViewer.variantName = "blue";
-    }
+    const modelViewer = modelRef.current as unknown as HTMLDivElement & { variantName: string, availableVariants: string[] };
+
+    const onLoad = () => {
+      if (modelViewer.availableVariants) {
+        setVariants(modelViewer.availableVariants);
+      }
+      if (selectedColor) {
+        modelViewer.variantName = selectedColor;
+      }
+    };
+
+    modelViewer?.addEventListener('load', onLoad);
+
+    return () => {
+      modelViewer?.removeEventListener('load', onLoad);
+    };
   }, [selectedColor]);
 
-  return (  
+  const handleVariantChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (modelRef.current) {
+      const modelViewer = modelRef.current as unknown as { variantName: string };
+      modelViewer.variantName = event.target.value === 'default' ? '' : event.target.value;
+    }
+  };
+
+  return (
     <div id="card">
       <model-viewer
         ref={modelRef}
         src={src}
         ios-src=""
-        // poster="https://cdn.glitch.com/36cb8393-65c6-408d-a538-055ada20431b%2Fposter-astronaut.png?v=1599079951717"
-        alt="A 3D model of an astronaut"
+        alt="A 3D model"
         shadow-intensity="1"
         camera-controls
         auto-rotate
-        tone-mapping="yellow"
-        ar5
+        tone-mapping="neutral"
+        ar
         ar-modes="webxr scene-viewer quick-look"
         style={{ width: "750px", height: "400px" }}
       ></model-viewer>
+      <div className="controls">
+        <div className="">Variant: 
+          <select id="variant" onChange={handleVariantChange}>
+            <option value="default">Default</option>
+            {variants.map(variant => (
+              <option key={variant} value={variant}>{variant}</option>
+            ))}
+          </select>
+        </div>
+      </div>
     </div>
   );
 };
