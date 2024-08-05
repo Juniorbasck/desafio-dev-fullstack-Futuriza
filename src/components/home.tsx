@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchItems } from "../hooks/useItems";
-import ModelViewer  from "@google/model-viewer";
-import { ThreeDOMElement } from "@google/model-viewer/lib/features/scene-graph/three-dom-element";
 import dynamic from "next/dynamic";
-
-
 
 export function HomeComponent() {
   const [name, setName] = useState<string>("");
@@ -16,20 +12,21 @@ export function HomeComponent() {
   const [error, setError] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>("");
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchItems();
-        
+
         console.log(response.glbFile);
         if (response) {
           setName(response.name);
-          setModelSrc(response.glbFile); 
-          const coresArray = Object.entries(response.variants).map(([name, color]) => ({
-            name,
-            color,
-          }));
+          setModelSrc(response.glbFile);
+          const coresArray = Object.entries(response.variants).map(
+            ([name, color]) => ({
+              name,
+              color: String(color), // Garantindo que color é uma string
+            })
+          );
           setCores(coresArray);
         } else {
           setError("Formato de resposta inválido");
@@ -60,12 +57,11 @@ export function HomeComponent() {
 
   const Model = dynamic(() => import("./model"), { ssr: false });
 
-
   return (
     <div className="grid grid-cols-12 gap-5 p-10">
       <div className="text-black flex col-span-6 items-end justify-end p-10">
         <div className="bg-sky-950">
-          <Model src={modelSrc} selectedColor={selectedColor}/>
+          <Model src={modelSrc} selectedColor={selectedColor} />
         </div>
       </div>
       <div className="text-black col-span-6 p-5">
