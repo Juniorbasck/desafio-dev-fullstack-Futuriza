@@ -30,3 +30,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist  # ou o diretório onde o seu site é gerado
           publish_branch: gh-pages
+          cname: desafio-dev-fullstack-Futuriza
