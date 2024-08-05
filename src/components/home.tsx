@@ -1,31 +1,35 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
-import loadModelViewer from "../hooks/ModelViewe"; // Certifique-se de que o caminho esteja correto
-import { fetchItems } from "../hooks/useItems"; // Certifique-se de que o caminho esteja correto
+import { fetchItems } from "../hooks/useItems";
+import { Model } from "./model";
+import ModelViewer  from "@google/model-viewer";
+import { ThreeDOMElement } from "@google/model-viewer/lib/features/scene-graph/three-dom-element";
+import dynamic from "next/dynamic";
+
+
 
 export function HomeComponent() {
   const [name, setName] = useState<string>("");
   const [cores, setCores] = useState<{ name: string; color: string }[]>([]);
-  const [modelUrl, setModelUrl] = useState<string | null>(null);
+  const [modelSrc, setModelSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await loadModelViewer(); // Carrega o script do model-viewer
         const response = await fetchItems();
         
+        console.log(response.glbFile);
         if (response) {
           setName(response.name);
-          // Transformar o objeto variants em um array de objetos { name, color }
+          setModelSrc(response.glbFile); 
           const coresArray = Object.entries(response.variants).map(([name, color]) => ({
             name,
             color,
           }));
           setCores(coresArray);
-          setModelUrl(response.glbFile); // Configura o URL do modelo GLB
         } else {
           setError("Formato de resposta inválido");
         }
@@ -48,25 +52,17 @@ export function HomeComponent() {
     return <div>{error}</div>;
   }
 
+  const Model = dynamic(() => import("./model"), { ssr: false });
+
+
   return (
-    <div className="grid grid-cols-12 gap-5">
-      <div className="flex col-span-6 bg-red-600 justify-end p-5">
-        <h1>Lado 1</h1>
-        {modelUrl && (
-          <model-viewer
-            alt="Modelo 3D"
-            src={modelUrl}
-            ar
-            environment-image="shared-assets/environments/moon_1k.hdr"
-            poster="shared-assets/models/NeilArmstrong.webp"
-            shadow-intensity="1"
-            camera-controls
-            touch-action="pan-y"
-            style={{ width: "100%", height: "400px" }} // Ajuste o tamanho conforme necessário
-          ></model-viewer>
-        )}
+    <div className="grid grid-cols-12 gap-5 p-10">
+      <div className="text-black flex col-span-6 items-end justify-end p-10">
+        <div className="bg-sky-950">
+          <Model src={modelSrc}/>
+        </div>
       </div>
-      <div className="text-black col-span-6 border p-5">
+      <div className="text-black col-span-6 p-5">
         <div>
           <h1 className="text-2xl font-bold">{name}</h1>
           <p className="text-xl">Cores</p>
