@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { fetchItems } from "../hooks/useItems";
-import { Model } from "./model";
 import ModelViewer  from "@google/model-viewer";
 import { ThreeDOMElement } from "@google/model-viewer/lib/features/scene-graph/three-dom-element";
 import dynamic from "next/dynamic";

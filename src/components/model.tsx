@@ -22,13 +22,13 @@ const Model: React.FC<ModelProps> = ({ src, selectedColor }) => {
         ref={modelRef}
         src={src}
         ios-src=""
-        poster="https://cdn.glitch.com/36cb8393-65c6-408d-a538-055ada20431b%2Fposter-astronaut.png?v=1599079951717"
+        // poster="https://cdn.glitch.com/36cb8393-65c6-408d-a538-055ada20431b%2Fposter-astronaut.png?v=1599079951717"
         alt="A 3D model of an astronaut"
         shadow-intensity="1"
         camera-controls
         auto-rotate
         tone-mapping="yellow"
-        ar
+        ar5
         ar-modes="webxr scene-viewer quick-look"
         style={{ width: "750px", height: "400px" }}
       ></model-viewer>
